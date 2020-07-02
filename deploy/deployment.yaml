@@ -61,10 +61,38 @@ spec:
           requests:
             cpu: 5m
             memory: 20Mi
+      - name: nri-flex-sidecar
+        image: newrelic/infrastructure:latest
+        volumeMounts:
+        - mountPath: /output
+          name: report-data
+        - mountPath: /etc/newrelic-infra/integrations.d
+          name: nri-flex-krr-volume
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        #securityContext:
+        #  readOnlyRootFilesystem: true
+        #  runAsNonRoot: true
+        #  runAsUser: 1000
+        env:
+          - name: "NRIA_LICENSE_KEY"
+            valueFrom:
+              secretKeyRef:
+                name: nri-license-key
+                key: licenseKey
+          - name: "NRIA_IS_FORWARD_ONLY"
+            value: "true"
       volumes:
           - name: report-data
             emptyDir:
               sizeLimit: 500Mi
+          - name: nri-flex-krr-volume
+            configMap:
+              name: nri-flex-krr
           # optional: use a custom CSV with node/server prices
           # - name: config
           #   configMap:

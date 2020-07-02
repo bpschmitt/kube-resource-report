@@ -9,3 +9,46 @@ data:
   pricing.csv: |+
     dc-1,master,30.000
     dc-1,worker,500.000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nri-flex-krr
+  namespace: default
+data:
+  krr.yml: |
+    integrations:
+      - name: nri-flex
+        interval: 60s
+        timeout: 30s
+        config:
+          name: kubeResourceReport
+          apis:
+            - event_type: krrClusterSample
+              commands:
+                - run: "cat /output/clusters.tsv"
+                  split: horizontal
+                  row_start: 1
+                  set_header: [clusterId,apiServerUrl,masterNodes,workerNodes,workerInstanceType,kubeletVersion,cpuCapacity,memoryCapacity,cpuAllocatable,memoryAllocatable,puRequests,memoryRequests,cpuUsage,memoryUsage,costUSD,slackCostUSD]
+                  split_by: \t
+            - event_type: krrApplicationSample
+              commands:
+                - run: "cat /output/applications.tsv"
+                  split: horizontal
+                  row_start: 1
+                  set_header: [id,team,clusters,pods,cpuRequests,memoryRequests,cpuUsage,memoryUsage,costUSD,slackCostUSD]
+                  split_by: \t
+            - event_type: krrPodSample
+              commands:
+                - run: "cat /output/pods.tsv"
+                  split: horizontal
+                  row_start: 1
+                  set_header: [clusterId,apiServerUrl,namespace,name,application,component,containerImages,cpuRequests,memoryRequests,puUsage,memoryUsage,cpuRecommendation,memoryRecommendation,costUSD,slackCostUSD]
+                  split_by: \t
+            - event_type: krrNamespaceSample
+              commands:
+                - run: "cat /output/namespaces.tsv"
+                  split: horizontal
+                  row_start: 1
+                  set_header: [name,status,clusterPods,cpuRequests,memoryRequests,cpuUsage,memoryUsage,costUSD,slackCostUSD]
+                  split_by: \t
