@@ -29,7 +29,7 @@ data:
                 - run: "cat /output/clusters.tsv"
                   split: horizontal
                   row_start: 1
-                  set_header: [clusterId,apiServerUrl,masterNodes,workerNodes,workerInstanceType,kubeletVersion,cpuCapacity,memoryCapacity,cpuAllocatable,memoryAllocatable,puRequests,memoryRequests,cpuUsage,memoryUsage,costUSD,slackCostUSD]
+                  set_header: [clusterId,apiServerUrl,masterNodes,workerNodes,workerInstanceType,kubeletVersion,cpuCapacity,memoryCapacity,cpuAllocatable,memoryAllocatable,cpuRequests,memoryRequests,cpuUsage,memoryUsage,costUSD,slackCostUSD]
                   split_by: \t
             - event_type: krrApplicationSample
               commands:
@@ -43,7 +43,7 @@ data:
                 - run: "cat /output/pods.tsv"
                   split: horizontal
                   row_start: 1
-                  set_header: [clusterId,apiServerUrl,namespace,name,application,component,containerImages,cpuRequests,memoryRequests,puUsage,memoryUsage,cpuRecommendation,memoryRecommendation,costUSD,slackCostUSD]
+                  set_header: [clusterId,apiServerUrl,namespace,name,application,component,containerImages,cpuRequests,memoryRequests,cpuUsage,memoryUsage,cpuRecommendation,memoryRecommendation,costUSD,slackCostUSD]
                   split_by: \t
             - event_type: krrNamespaceSample
               commands:
